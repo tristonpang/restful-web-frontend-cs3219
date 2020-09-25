@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <h1>Contacts</h1>
-    <contact-form @add:contact="addContact" />
-    <contacts-table :contacts="contacts" @delete:contact='deleteContact'/>
+    <div id='form-div'>
+      <contact-form @add:contact="addContact" />
+    </div>
+    <contacts-table :contacts="contacts" @delete:contact="deleteContact" />
   </div>
 </template>
 
@@ -11,7 +13,8 @@ import axios from "axios";
 
 import ContactsTable from "@/components/ContactsTable.vue";
 import ContactForm from "@/components/ContactForm.vue";
-const apiUrl = 'https://0uolcs7ym4.execute-api.us-east-1.amazonaws.com/dev/api/contacts';
+const apiUrl =
+  "https://0uolcs7ym4.execute-api.us-east-1.amazonaws.com/dev/api/contacts";
 
 export default {
   name: "App",
@@ -40,7 +43,7 @@ export default {
     addContact(contact) {
       let newSavedContact;
       axios
-        .post(apiUrl, {...contact})
+        .post(apiUrl, { ...contact })
         .then((response) => {
           newSavedContact = response.data.data;
           this.contacts = [...this.contacts, newSavedContact];
@@ -48,19 +51,20 @@ export default {
         .catch((e) => {
           console.log(e);
         });
-      
     },
     deleteContact(contactId) {
-      this.contacts = this.contacts.filter(contact => contact._id !== contactId);
-      let removedContact = this.contacts.filter(contact => contact._id === contactId);
-      axios
-        .delete(apiUrl + '/' + contactId)
-        .catch((e) => {
-          console.log(e);
-          // re-add contact on error
-          this.contacts = [...this.contacts, removedContact];
-        });
-    }
+      this.contacts = this.contacts.filter(
+        (contact) => contact._id !== contactId
+      );
+      let removedContact = this.contacts.filter(
+        (contact) => contact._id === contactId
+      );
+      axios.delete(apiUrl + "/" + contactId).catch((e) => {
+        console.log(e);
+        // re-add contact on error
+        this.contacts = [...this.contacts, removedContact];
+      });
+    },
   },
 };
 </script>
@@ -73,5 +77,9 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+#form-div {
+  margin: 2em 25%;
+  text-align: left;
 }
 </style>

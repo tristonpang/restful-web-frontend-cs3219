@@ -15,7 +15,9 @@
           <td>{{ contact.gender }}</td>
           <td>{{ contact.email }}</td>
           <td>{{ contact.phone }}</td>
-          <b-button @click="handleDelete(contact._id)">Delete</b-button>
+          <b-button variant="danger" @click="handleDelete(contact._id)"
+            >Delete</b-button
+          >
         </tr>
       </tbody>
     </table>
@@ -31,7 +33,7 @@ export default {
   methods: {
     handleDelete(id) {
       this.$emit("delete:contact", id);
-    }
+    },
   },
 };
 </script>
@@ -39,5 +41,6 @@ export default {
 <style scoped>
 div table {
   width: 100%;
+  border-collapse: separate;
 }
 </style>
