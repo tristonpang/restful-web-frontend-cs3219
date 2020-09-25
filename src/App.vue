@@ -1,10 +1,14 @@
 <template>
   <div id="app">
     <h1>Contacts</h1>
-    <div id='form-div'>
+    <div id="form-div">
       <contact-form @add:contact="addContact" />
     </div>
-    <contacts-table :contacts="contacts" @delete:contact="deleteContact" />
+    <contacts-table
+      :contacts="contacts"
+      @delete:contact="deleteContact"
+      @edit:contact="editContact"
+    />
   </div>
 </template>
 
@@ -58,11 +62,27 @@ export default {
       );
       let removedContact = this.contacts.filter(
         (contact) => contact._id === contactId
-      );
+      )[0];
       axios.delete(apiUrl + "/" + contactId).catch((e) => {
         console.log(e);
         // re-add contact on error
         this.contacts = [...this.contacts, removedContact];
+      });
+    },
+    editContact(contactId, updatedContact) {
+      const oldContact = this.contacts.filter(
+        (contact) => contact._id === contactId
+      )[0];
+      
+      this.contacts = this.contacts.map((contact) =>
+        contact._id === contactId ? updatedContact : contact
+      );
+      axios.put(apiUrl + "/" + contactId, { ...updatedContact }).catch((e) => {
+        console.log(e);
+        // undo changes on error
+        this.contacts = this.contacts.map((contact) =>
+          contact._id === contactId ? oldContact : contact
+        );
       });
     },
   },
